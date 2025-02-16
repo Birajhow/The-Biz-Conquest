@@ -33,7 +33,7 @@ const BackgroundContainer = styled.div`
     background-image: none;
     background-color: gray;
     overflow: auto;
-    displat: inline-block;
+    display: inline-block;
   }
 `;
 
@@ -84,9 +84,9 @@ class App extends React.Component {
     }
   }
 
-  onDragEnd = async (result) => {
+  onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
-    
+
     if (!destination) return;
 
     if (
@@ -110,13 +110,15 @@ class App extends React.Component {
           taskIds: newTaskIds,
         };
 
-        return {
+        const newState = {
           ...prevState,
           columns: {
             ...prevState.columns,
             [newColumn.id]: newColumn,
           },
         };
+
+        return newState;
       }
 
       const startTaskIds = Array.from(start.taskIds);
@@ -133,7 +135,7 @@ class App extends React.Component {
         taskIds: finishTaskIds,
       };
 
-      return {
+      const newState = {
         ...prevState,
         columns: {
           ...prevState.columns,
@@ -141,8 +143,12 @@ class App extends React.Component {
           [newFinish.id]: newFinish,
         },
       };
-    });
 
+      return newState;
+    }, this.saveState);
+  };
+
+  saveState = async () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/auth/save", {
         method: "POST",
