@@ -1,7 +1,6 @@
 # Organization Chart Builder
 
-![Demo](https://imgur.com/Jpdm3d2)
-
+![Demo](https://imgur.com/S2xOZVV.gif)
 
 ## Overview
 This project is a minimal, interactive organization chart application built using **FastAPI** for the backend and **React** for the frontend. It allows users to view an employee hierarchy, update reporting relationships via drag-and-drop, and persist data changes through an API.
