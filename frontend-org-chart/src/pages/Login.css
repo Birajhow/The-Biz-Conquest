@@ -1,0 +1,66 @@
+/* Login.css */
+#textControl {
+    font-family: 'Montserrat', sans-serif; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    padding-top: 33vh;
+}
+
+#textControl form { 
+    max-width: 400px; 
+}
+
+.text-6xl {
+    font-size: 4rem; 
+}
+
+#email_form{
+    display: block;
+    width: 85%;
+    justify-self: center;
+    margin-bottom: 10%;
+    margin-top: 10%;
+}
+
+#pass_form{
+    display: block;
+    width: 85%;
+    justify-self: center;
+    margin-bottom: 10%;
+}
+
+#login_title{
+    color:white;
+}
+
+#login_button{
+    display: block;
+    justify-self: center;
+    background: unset;
+}
+
+#bottom_text{
+    color:white;
+}
+
+#forgot{
+    font-size: 12px;
+    display: block;
+    margin-top: 2%;
+}
+
+#error_message {
+    font-size: 14px;
+    color: lightcoral; 
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#signup_error{
+    font-size: 14px;
+    color: lightcoral; 
+    font-weight: bold;
+    margin-top: 10px;
+}
