@@ -7,10 +7,10 @@ from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)  # Correct way to create tables
+    Base.metadata.create_all(bind=engine) 
     yield
 
-app = FastAPI(lifespan=lifespan)  # Only ONE app instance
+app = FastAPI(lifespan=lifespan)
 
 origins = [
     "http://localhost:5173",

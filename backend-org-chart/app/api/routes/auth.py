@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm  # Import OAuth2PasswordBearer
-from app.schemas.auth import LoginRequest  # Importando o esquema LoginRequest
-from app.schemas.auth import LoginRequest, SignupRequest # Import SignupRequest
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm  
+from app.schemas.auth import LoginRequest  
+from app.schemas.auth import LoginRequest, SignupRequest 
 from datetime import datetime, timedelta
 import jwt
 from app.db import get_db
@@ -14,13 +14,13 @@ from app.schemas.SaveState import SaveState
 from app.models.DragState import DragColumn, DragTask, DragState
 
 router = APIRouter()
-SECRET_KEY = "supersecretkey"  # In a real app, use environment variables!
+SECRET_KEY = "supersecretkey" 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-# Use scrypt instead of bcrypt
+
 pwd_context = CryptContext(schemes=["scrypt"], deprecated="auto")
 
 def verify_password(plain_password, hashed_password):
@@ -57,9 +57,9 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
     access_token = create_access_token(data={"sub": credentials.email})
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.post("/save", response_model=dict)  # 🔹 Definir um response_model genérico
+@router.post("/save", response_model=dict)  
 def save_drag_state(data: SaveState, db: Session = Depends(get_db)):
-    data_dict = data.model_dump()  # 🔹 Converte o modelo Pydantic para um dicionário nativo do Python
+    data_dict = data.model_dump()
     try:
         for column_id, column in data_dict["columns"].items():
             db_column = db.query(DragColumn).filter_by(id=column_id).first()
@@ -73,7 +73,6 @@ def save_drag_state(data: SaveState, db: Session = Depends(get_db)):
                 db_task = DragTask(id=task_id, name=task["name"], title=task["title"])
                 db.add(db_task)
 
-        # Limpando estado antigo e inserindo nova organização
         db.query(DragState).delete()
         
         for column_id, column in data.columns.items():
@@ -82,30 +81,30 @@ def save_drag_state(data: SaveState, db: Session = Depends(get_db)):
                 db.add(db_drag_state)
 
         db.commit()
-        return {"message": "Estado salvo com sucesso!"}
+        return {"message": "State saved!"}
 
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Erro ao salvar estado: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error saving state: {str(e)}")
     
 @router.get("/get-state", response_model=dict)
 def get_drag_state(db: Session = Depends(get_db)):
-    # Buscar colunas e tarefas do banco de dados
+    # Find columns
     columns = db.query(DragColumn).all()
     tasks = db.query(DragTask).all()
     states = db.query(DragState).all()
 
-    # Construir tasks no formato esperado
+    # Build tasks dict
     task_dict = {task.id: {"id": task.id, "name": task.name, "title": task.title} for task in tasks}
 
-    # Construir colunas e ordenar tasks dentro das colunas
+    # Build columns and order
     column_dict = {col.id: {"id": col.id, "title": col.title, "taskIds": []} for col in columns}
 
     for state in states:
         if state.column_id in column_dict:
             column_dict[state.column_id]["taskIds"].append(state.task_id)
 
-    # Ordem das colunas
+    # Columns order
     column_order = [col.id for col in columns]
 
     return {

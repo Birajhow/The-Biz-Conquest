@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from app.db import Base  # Certifique-se de importar corretamente a Base do SQLAlchemy
+from app.db import Base
 
 class DragColumn(Base):
     __tablename__ = "drag_columns"
